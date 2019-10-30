@@ -15,7 +15,15 @@ RUN yum -y install ruby ruby-devel ruby-libs rubygems rpm-build \
 #------------
 # ENV
 #------------
-ENV CXXFLAGS="-std=gnu89"
+# gcc4.4
+ENV PACKAGES="compat-gcc-44 compat-gcc-44-c++"
+RUN yum install -y -q $PACKAGES && yum clean all \
+ && yum remove -y gcc gcc-c++ \
+ && update-alternatives \
+ --install /usr/bin/gcc gcc /usr/bin/gcc44 20 \
+ --slave   /usr/bin/g++ g++ /usr/bin/g++44
+ENV CC=/usr/bin/gcc44
+ENV CXX=/usr/bin/g++44
 
 #----------
 # GCC 4.4.7
